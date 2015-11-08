@@ -1,0 +1,29 @@
+{
+	"version": 0,
+	"dependencies": [
+		{
+			"importpath": "github.com/fatih/color",
+			"repository": "https://github.com/fatih/color",
+			"revision": "8640971291e54b520f781270275b7ed8762ac909",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/mattn/go-isatty",
+			"repository": "https://github.com/mattn/go-isatty",
+			"revision": "d6aaa2f596ae91a0a58d8e7f2c79670991468e4f",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/shiena/ansicolor",
+			"repository": "https://github.com/shiena/ansicolor",
+			"revision": "d445752f6f66f9cd987722f109149f6799cdf1de",
+			"branch": "master"
+		},
+		{
+			"importpath": "github.com/tj/go-spin",
+			"repository": "https://github.com/tj/go-spin",
+			"revision": "4bd47d3603b5c0460028794fbbf207f881088c08",
+			"branch": "master"
+		}
+	]
+}
