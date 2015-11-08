@@ -1,20 +1,18 @@
 # buntstift-go
 
-buntstift makes the CLI colorful.
+buntstift-go makes the CLI colorful.
 
 ## Installation
 
-// ...
+...
 
 ## Quick start
 
-// ...
+...
 
 ## Running the build
 
-This module can be built using [gb](http://getgb.io/).
-
-    $ gb build
+...
 
 ## License
 
