@@ -2,6 +2,8 @@
 
 buntstift-go makes the CLI colorful.
 
+![buntstift](https://github.com/thenativeweb/buntstift-go/raw/master/images/logo.jpg "buntstift")
+
 ## Installation
 
 ...
