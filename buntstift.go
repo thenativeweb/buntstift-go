@@ -11,6 +11,10 @@ import (
 	"github.com/tj/go-spin"
 )
 
+// Output defines the standard output of the print functions. By default
+// os.Stdout from color is used.
+var Output = color.Output
+
 // Options ...
 type Options struct {
 	NoColor bool
@@ -47,6 +51,19 @@ func New(params ...interface{}) *Buntstift {
 	return b
 }
 
+func (b *Buntstift) unsetColor() {
+	if b.options.NoColor {
+		return
+	}
+	color.Unset()
+}
+
+func (b *Buntstift) printf(c *color.Color, format string, a ...interface{}) (n int, err error) {
+	c.Set()
+	defer b.unsetColor()
+	return fmt.Fprintf(Output, format, a...)
+}
+
 func (b *Buntstift) colorize(values ...color.Attribute) *color.Color {
 	c := color.New(values...)
 	if b.options.NoColor {
@@ -58,25 +75,26 @@ func (b *Buntstift) colorize(values ...color.Attribute) *color.Color {
 // Success ...
 func (b *Buntstift) Success(text string) {
 	output := b.colorize(color.FgGreen, color.Bold)
-	output.Printf(b.icons["checkMark"]+" %v\n", text)
+	b.printf(output, b.icons["checkMark"]+" %v\n", text)
+	// b.printf(output, )
 }
 
 // Error ...
 func (b *Buntstift) Error(text string) {
 	output := b.colorize(color.FgRed, color.Bold)
-	output.Printf(b.icons["crossMark"]+" %v\n", text)
+	b.printf(output, b.icons["crossMark"]+" %v\n", text)
 }
 
 // Warn ...
 func (b *Buntstift) Warn(text string) {
 	output := b.colorize(color.FgYellow, color.Bold)
-	output.Printf(b.icons["rightPointingPointer"]+" %v\n", text)
+	b.printf(output, b.icons["rightPointingPointer"]+" %v\n", text)
 }
 
 // Info ...
 func (b *Buntstift) Info(text string) {
 	output := b.colorize(color.FgWhite)
-	output.Printf("  %v\n", text)
+	b.printf(output, "  %v\n", text)
 }
 
 // List ...
@@ -91,13 +109,13 @@ func (b *Buntstift) List(text string, optionalLevel ...int) {
 // ListIndent ...
 func (b *Buntstift) ListIndent(level int, text string) {
 	output := b.colorize(color.FgWhite)
-	output.Printf("%v"+b.icons["multiplicationDot"]+" %v\n", strings.Repeat(" ", level*2), text)
+	b.printf(output, "%v"+b.icons["multiplicationDot"]+" %v\n", strings.Repeat(" ", level*2), text)
 }
 
 // NewLine ...
 func (b *Buntstift) NewLine() {
 	output := b.colorize(color.FgWhite)
-	output.Printf(" \n")
+	b.printf(output, " \n")
 }
 
 // Line ...
@@ -105,8 +123,7 @@ func (b *Buntstift) Line() {
 
 	w, _ := b.getTerminalSize()
 	output := b.colorize(color.FgWhite)
-	// output.Printf("%v \n", strings.Repeat("-", w))
-	output.Println(strings.Repeat("-", w))
+	b.printf(output, "%v \n", strings.Repeat("-", w))
 }
 
 // WaitFor ...
