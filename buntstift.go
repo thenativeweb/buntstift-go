@@ -11,6 +11,10 @@ import (
 	"github.com/tj/go-spin"
 )
 
+const (
+	version = "0.1.0"
+)
+
 // Options ...
 type Options struct {
 	NoColor bool
