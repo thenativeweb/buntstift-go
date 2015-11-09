@@ -14,11 +14,7 @@ buntstift-go makes the CLI colorful.
 
 ## Running the build
 
-This module can be built using [gb](http://getgb.io/).
-
-```bash
-$ gb build
-```
+...
 
 ## License
 
