@@ -42,10 +42,9 @@ func New(params ...interface{}) *Buntstift {
 		b = &Buntstift{options: Options{}}
 	}
 
+	b.icons = unicode
 	if b.options.NoUtf8 {
 		b.icons = ascii
-	} else {
-		b.icons = unicode
 	}
 
 	return b
