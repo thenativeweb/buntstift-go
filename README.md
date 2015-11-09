@@ -14,6 +14,7 @@ buntstift-go makes the CLI colorful.
 
 ```
 b := buntstift.New()
+b.Success("Hello World")
 
 ```
 With options:
@@ -26,8 +27,7 @@ var options = buntstift.Options{
 }
 
 b := buntstift.New(options)
-
-b.Success("Hello World")
+b.Success("Without color and Utf8")
 
 ```
 Methods:
