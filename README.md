@@ -6,15 +6,59 @@ buntstift-go makes the CLI colorful.
 
 ## Installation
 
-...
+```
+  go get gopkg.in/thenativeweb/buntstift-go.v0
+```
 
 ## Quick start
 
-...
+```
+b := buntstift.New()
 
-## Running the build
+```
+With options:
 
-...
+```
+
+var options = buntstift.Options{
+  NoColor: true,
+  NoUtf8:  true,
+}
+
+b := buntstift.New(options)
+
+b.Success("Hello World")
+
+```
+Methods:
+
+```
+func (b *Buntstift) WaitFor(worker func())
+    WaitFor shows a spinner while worker is in progress
+
+func (b *Buntstift) Error(text string)
+    Error ...
+
+func (b *Buntstift) Info(text string)
+    Info ...
+
+func (b *Buntstift) Line()
+    Line ...
+
+func (b *Buntstift) List(text string)
+    List ...
+
+func (b *Buntstift) ListIndent(level int, text string)
+    ListIndent ...
+
+func (b *Buntstift) Success(text string)
+    Success ...
+
+func (b *Buntstift) Warn(text string)
+    Warn ...
+
+```
+
 
 ## License
 
