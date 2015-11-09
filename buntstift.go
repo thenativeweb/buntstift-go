@@ -11,10 +11,6 @@ import (
 	"github.com/tj/go-spin"
 )
 
-const (
-	version = "0.1.0"
-)
-
 // Options ...
 type Options struct {
 	NoColor bool
@@ -33,12 +29,11 @@ func New(params ...interface{}) *Buntstift {
 
 	if len(params) > 0 {
 		param, ok := params[0].(Options)
-		if ok {
-			b = new(Buntstift)
-			b.options = param
-		} else {
+		if !ok {
 			panic("Wrong parameter type, must be Buntstift.Options")
 		}
+		b = new(Buntstift)
+		b.options = param
 	} else {
 		b = &Buntstift{options: Options{}}
 	}
@@ -66,10 +61,10 @@ func (b *Buntstift) Success(text string) {
 	output.Printf(b.icons["checkMark"]+" %v\n", text)
 }
 
-// Error
+// Error ...
 func (b *Buntstift) Error(text string) {
 	output := b.colorize(color.FgRed, color.Bold)
-	output.Printf("✗ %v\n", text)
+	output.Printf(b.icons["crossMark"]+" %v\n", text)
 }
 
 // Warn ...
@@ -85,8 +80,12 @@ func (b *Buntstift) Info(text string) {
 }
 
 // List ...
-func (b *Buntstift) List(text string) {
-	b.ListIndent(0, text)
+func (b *Buntstift) List(text string, optionalLevel ...int) {
+	level := 0
+	if len(optionalLevel) > 0 {
+		level = optionalLevel[0]
+	}
+	b.ListIndent(level, text)
 }
 
 // ListIndent ...
@@ -95,23 +94,32 @@ func (b *Buntstift) ListIndent(level int, text string) {
 	output.Printf("%v"+b.icons["multiplicationDot"]+" %v\n", strings.Repeat(" ", level*2), text)
 }
 
+// NewLine ...
+func (b *Buntstift) NewLine() {
+	output := b.colorize(color.FgWhite)
+	output.Printf(" \n")
+}
+
 // Line ...
 func (b *Buntstift) Line() {
+
 	w, _ := b.getTerminalSize()
 	output := b.colorize(color.FgWhite)
+	// output.Printf("%v \n", strings.Repeat("-", w))
 	output.Println(strings.Repeat("-", w))
 }
 
 // WaitFor ...
-func (b *Buntstift) WaitFor(worker func()) {
-	stop := make(chan bool, 1)
-	done := make(chan bool, 1)
+func (b *Buntstift) WaitFor(worker func() error) error {
+	stop := make(chan bool)
+	done := make(chan bool)
 
 	go b.spin(stop, done)
-	worker()
+	err := worker()
 
 	stop <- true
 	<-done
+	return err
 }
 
 func (b *Buntstift) spin(stop, done chan bool) {
