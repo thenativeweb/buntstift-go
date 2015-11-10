@@ -126,16 +126,15 @@ func (b *Buntstift) Line() {
 }
 
 // WaitFor ...
-func (b *Buntstift) WaitFor(worker func() error) error {
+func (b *Buntstift) WaitFor(worker func()) {
 	stop := make(chan bool)
 	done := make(chan bool)
 
 	go b.spin(stop, done)
-	err := worker()
+	worker()
 
 	stop <- true
 	<-done
-	return err
 }
 
 func (b *Buntstift) spin(stop, done chan bool) {
