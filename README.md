@@ -5,57 +5,108 @@ buntstift-go makes the CLI colorful.
 ![buntstift](https://github.com/thenativeweb/buntstift-go/raw/master/images/logo.jpg "buntstift")
 
 ## Installation
-
-```
-  go get gopkg.in/thenativeweb/buntstift-go.v0
-```
+    $ go get gopkg.in/thenativeweb/buntstift-go.v0
 
 ## Quick start
 
-```
+```go
 b := buntstift.New()
-
-```
-With options:
-
 ```
 
+To write messages to the console use the `Success` and `Error` methods to show that your application has succeeded or failed. If you want to provide additional information, use the `Info` and `Verbose` methods. In case of any warnings, use the `Warn` method.
+
+```go
+b.Info("Updating...")
+b.Success("Done.");
+```
+
+## Printing blank lines
+
+To print a blank line call the `NewLine` method.
+
+```go
+b.NewLine();
+```
+
+## Printing lines
+
+To print a line call the `Line` method.
+
+```go
+b.Line();
+```
+
+## Using lists
+
+To write a list to the console use the `List` method. Optionally, you may specify an indentation level. Setting the indentation level to `0` is equal to omitting it.
+
+```go
+b.List("foo");
+b.List("bar", 0);
+b.List("baz", 1);
+
+//  ∙ foo
+//  ∙ bar
+//    ∙ baz
+```
+
+## Disabling colors
+
+If you want to force disable colors set the NoColor option to true.
+
+```go
 var options = buntstift.Options{
   NoColor: true,
+}
+b := buntstift.New(options)
+b.Info("No color")
+```
+
+
+## Disabling UTF characters
+
+If your system does not support UTF characters, disable them by setting the NoUtf8 option to true.
+
+```go
+var options = buntstift.Options{
   NoUtf8:  true,
 }
-
 b := buntstift.New(options)
+b.Info("Ascii")
+```
 
-b.Success("Hello World")
+## Waiting for long-running tasks
+
+If your application performs a long-running task, you may use the `WaitFor` method to show a waiting indicator to the user. You need to return an error or nil.
+
+```go
+b.WaitFor(func() error {
+  // ...
+
+  return err
+});
+```
+
+## Methods
 
 ```
-Methods:
-
-```
-func (b *Buntstift) WaitFor(worker func())
-    WaitFor shows a spinner while worker is in progress
+func (b *Buntstift) WaitFor(worker func() error)
 
 func (b *Buntstift) Error(text string)
-    Error ...
 
 func (b *Buntstift) Info(text string)
-    Info ...
 
 func (b *Buntstift) Line()
-    Line ...
 
-func (b *Buntstift) List(text string)
-    List ...
+func (b *Buntstift) List(text string, level ...int)
 
 func (b *Buntstift) ListIndent(level int, text string)
-    ListIndent ...
+
+func (b *Buntstift) NewLine()
 
 func (b *Buntstift) Success(text string)
-    Success ...
 
 func (b *Buntstift) Warn(text string)
-    Warn ...
 
 ```
 

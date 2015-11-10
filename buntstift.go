@@ -11,9 +11,9 @@ import (
 	"github.com/tj/go-spin"
 )
 
-const (
-	version = "0.1.0"
-)
+// Output defines the standard output of the print functions. By default
+// os.Stdout from color is used.
+var Output = color.Output
 
 // Options ...
 type Options struct {
@@ -33,23 +33,34 @@ func New(params ...interface{}) *Buntstift {
 
 	if len(params) > 0 {
 		param, ok := params[0].(Options)
-		if ok {
-			b = new(Buntstift)
-			b.options = param
-		} else {
+		if !ok {
 			panic("Wrong parameter type, must be Buntstift.Options")
 		}
+		b = new(Buntstift)
+		b.options = param
 	} else {
 		b = &Buntstift{options: Options{}}
 	}
 
+	b.icons = unicode
 	if b.options.NoUtf8 {
 		b.icons = ascii
-	} else {
-		b.icons = unicode
 	}
 
 	return b
+}
+
+func (b *Buntstift) unsetColor() {
+	if b.options.NoColor {
+		return
+	}
+	color.Unset()
+}
+
+func (b *Buntstift) printf(c *color.Color, format string, a ...interface{}) (n int, err error) {
+	c.Set()
+	defer b.unsetColor()
+	return fmt.Fprintf(Output, format, a...)
 }
 
 func (b *Buntstift) colorize(values ...color.Attribute) *color.Color {
@@ -63,49 +74,61 @@ func (b *Buntstift) colorize(values ...color.Attribute) *color.Color {
 // Success ...
 func (b *Buntstift) Success(text string) {
 	output := b.colorize(color.FgGreen, color.Bold)
-	output.Printf(b.icons["checkMark"]+" %v\n", text)
+	b.printf(output, b.icons["checkMark"]+" %v\n", text)
+	// b.printf(output, )
 }
 
-// Error
+// Error ...
 func (b *Buntstift) Error(text string) {
 	output := b.colorize(color.FgRed, color.Bold)
-	output.Printf("✗ %v\n", text)
+	b.printf(output, b.icons["crossMark"]+" %v\n", text)
 }
 
 // Warn ...
 func (b *Buntstift) Warn(text string) {
 	output := b.colorize(color.FgYellow, color.Bold)
-	output.Printf(b.icons["rightPointingPointer"]+" %v\n", text)
+	b.printf(output, b.icons["rightPointingPointer"]+" %v\n", text)
 }
 
 // Info ...
 func (b *Buntstift) Info(text string) {
 	output := b.colorize(color.FgWhite)
-	output.Printf("  %v\n", text)
+	b.printf(output, "  %v\n", text)
 }
 
 // List ...
-func (b *Buntstift) List(text string) {
-	b.ListIndent(0, text)
+func (b *Buntstift) List(text string, optionalLevel ...int) {
+	level := 0
+	if len(optionalLevel) > 0 {
+		level = optionalLevel[0]
+	}
+	b.ListIndent(level, text)
 }
 
 // ListIndent ...
 func (b *Buntstift) ListIndent(level int, text string) {
 	output := b.colorize(color.FgWhite)
-	output.Printf("%v"+b.icons["multiplicationDot"]+" %v\n", strings.Repeat(" ", level*2), text)
+	b.printf(output, "%v"+b.icons["multiplicationDot"]+" %v\n", strings.Repeat(" ", level*2), text)
+}
+
+// NewLine ...
+func (b *Buntstift) NewLine() {
+	output := b.colorize(color.FgWhite)
+	b.printf(output, " \n")
 }
 
 // Line ...
 func (b *Buntstift) Line() {
+
 	w, _ := b.getTerminalSize()
 	output := b.colorize(color.FgWhite)
-	output.Println(strings.Repeat("-", w))
+	b.printf(output, "%v \n", strings.Repeat("-", w))
 }
 
 // WaitFor ...
 func (b *Buntstift) WaitFor(worker func()) {
-	stop := make(chan bool, 1)
-	done := make(chan bool, 1)
+	stop := make(chan bool)
+	done := make(chan bool)
 
 	go b.spin(stop, done)
 	worker()
