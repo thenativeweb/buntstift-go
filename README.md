@@ -5,6 +5,7 @@ buntstift-go makes the CLI colorful.
 ![buntstift](https://github.com/thenativeweb/buntstift-go/raw/master/images/logo.jpg "buntstift")
 
 ## Installation
+
     $ go get gopkg.in/thenativeweb/buntstift-go.v0
 
 ## Quick start
@@ -58,10 +59,10 @@ If you want to force disable colors set the NoColor option to true.
 var options = buntstift.Options{
   NoColor: true,
 }
+
 b := buntstift.New(options)
 b.Info("No color")
 ```
-
 
 ## Disabling UTF characters
 
@@ -71,45 +72,21 @@ If your system does not support UTF characters, disable them by setting the NoUt
 var options = buntstift.Options{
   NoUtf8:  true,
 }
+
 b := buntstift.New(options)
 b.Info("Ascii")
 ```
 
 ## Waiting for long-running tasks
 
-If your application performs a long-running task, you may use the `WaitFor` method to show a waiting indicator to the user. You need to return an error or nil.
+If your application performs a long-running task, you may use the `WaitFor` method to show a waiting indicator to the user.
 
 ```go
-b.WaitFor(func() error {
+b.WaitFor(func() {
+  // Do something
   // ...
-
-  return err
 });
 ```
-
-## Methods
-
-```
-func (b *Buntstift) WaitFor(worker func() error)
-
-func (b *Buntstift) Error(text string)
-
-func (b *Buntstift) Info(text string)
-
-func (b *Buntstift) Line()
-
-func (b *Buntstift) List(text string, level ...int)
-
-func (b *Buntstift) ListIndent(level int, text string)
-
-func (b *Buntstift) NewLine()
-
-func (b *Buntstift) Success(text string)
-
-func (b *Buntstift) Warn(text string)
-
-```
-
 
 ## License
 
