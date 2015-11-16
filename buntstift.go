@@ -11,7 +11,7 @@ import (
 	"github.com/tj/go-spin"
 )
 
-// Output defines the standard Color of the print functions. By default
+// Output defines the standard output of the print functions. By default
 // os.Stdout from color is used.
 var Output = color.Output
 
