@@ -123,18 +123,18 @@ func (b *Buntstift) Line() {
 }
 
 // WaitFor ...
-func (b *Buntstift) WaitFor(worker func()) {
+func (b *Buntstift) WaitFor(worker func(stop chan bool)) {
 	stop := make(chan bool)
-	done := make(chan bool)
+	// done := make(chan bool)
 
-	go b.spin(stop, done)
-	worker()
+	go b.spin(stop)
+	worker(stop)
 
-	stop <- true
-	<-done
+	// stop <- true
+	// <-done
 }
 
-func (b *Buntstift) spin(stop, done chan bool) {
+func (b *Buntstift) spin(stop chan bool) {
 	spinner := spin.New()
 
 loop:
@@ -142,7 +142,6 @@ loop:
 		select {
 		case <-stop:
 			fmt.Fprintf(Output, "\r")
-			done <- true
 			break loop
 
 		default:
