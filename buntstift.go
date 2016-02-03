@@ -27,11 +27,6 @@ type Buntstift struct {
 	icons   map[string]string
 }
 
-// ListOptions ...
-type ListOptions struct {
-	Indent int
-}
-
 // New Buntstift
 func New(params ...interface{}) *Buntstift {
 	var b *Buntstift
@@ -101,13 +96,13 @@ func (b *Buntstift) Info(text string) {
 }
 
 // List ...
-func (b *Buntstift) List(text string, optionalOptions ...ListOptions) {
-	var options = ListOptions{}
-	if len(optionalOptions) > 0 {
-		options = optionalOptions[0]
+func (b *Buntstift) List(text string, indentOptions ...int) {
+	indent := 0
+	if len(indentOptions) > 0 {
+		indent = indentOptions[0]
 	}
 	Color := b.colorize(color.FgWhite)
-	b.printf(Color, "%v %v %v\n", strings.Repeat(" ", options.Indent*2), b.icons["multiplicationDot"], text)
+	b.printf(Color, "%v %v %v\n", strings.Repeat(" ", indent*2), b.icons["multiplicationDot"], text)
 }
 
 // NewLine ...
