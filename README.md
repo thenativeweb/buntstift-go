@@ -82,9 +82,10 @@ b.Info("Ascii")
 If your application performs a long-running task, you may use the `WaitFor` method to show a waiting indicator to the user.
 
 ```go
-b.WaitFor(func() {
+b.WaitFor(func(stop chan bool) {
   // Do something
   // ...
+  stop <- true
 });
 ```
 
