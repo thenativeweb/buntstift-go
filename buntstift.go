@@ -15,19 +15,19 @@ import (
 // os.Stdout from color is used.
 var Output = color.Output
 
-// Options ...
+// Options struct
 type Options struct {
 	NoColor bool
 	NoUtf8  bool
 }
 
-// Buntstift ...
+// Buntstift struct
 type Buntstift struct {
 	options Options
 	icons   map[string]string
 }
 
-// New Buntstift
+// New Buntstift returns Buntstift instance
 func New(params ...interface{}) *Buntstift {
 	var b *Buntstift
 
@@ -71,64 +71,6 @@ func (b *Buntstift) colorize(values ...color.Attribute) *color.Color {
 	return Color
 }
 
-// Success ...
-func (b *Buntstift) Success(text string) {
-	Color := b.colorize(color.FgGreen, color.Bold)
-	b.printf(Color, "%v %v\n", b.icons["checkMark"], text)
-}
-
-// Error ...
-func (b *Buntstift) Error(text string) {
-	Color := b.colorize(color.FgRed, color.Bold)
-	b.printf(Color, "%v %v\n", b.icons["crossMark"], text)
-}
-
-// Warn ...
-func (b *Buntstift) Warn(text string) {
-	Color := b.colorize(color.FgYellow, color.Bold)
-	b.printf(Color, "%v %v\n", b.icons["rightPointingPointer"], text)
-}
-
-// Info ...
-func (b *Buntstift) Info(text string) {
-	Color := b.colorize(color.FgWhite)
-	b.printf(Color, "  %v\n", text)
-}
-
-// List ...
-func (b *Buntstift) List(text string, indentOptions ...int) {
-	indent := 0
-	if len(indentOptions) > 0 {
-		indent = indentOptions[0]
-	}
-	Color := b.colorize(color.FgWhite)
-	b.printf(Color, "%v %v %v\n", strings.Repeat(" ", indent*2), b.icons["multiplicationDot"], text)
-}
-
-// NewLine ...
-func (b *Buntstift) NewLine() {
-	fmt.Fprintf(Output, "\r \n")
-}
-
-// Line ...
-func (b *Buntstift) Line() {
-	width, _ := b.getTerminalSize()
-	Color := b.colorize(color.FgWhite)
-	b.printf(Color, "%v", strings.Repeat("-", width))
-}
-
-// WaitFor ...
-func (b *Buntstift) WaitFor(worker func(stop chan bool)) {
-	stop := make(chan bool)
-	// done := make(chan bool)
-
-	go b.spin(stop)
-	worker(stop)
-
-	// stop <- true
-	// <-done
-}
-
 func (b *Buntstift) spin(stop chan bool) {
 	spinner := spin.New()
 
@@ -153,4 +95,61 @@ func (b *Buntstift) getTerminalSize() (int, int) {
 	output, _ := cmd.Output()
 	fmt.Sscan(string(output), &height, &width)
 	return width, height
+}
+
+/*
+	Public Api
+*/
+
+// Error prints a red cross mark and text
+func (b *Buntstift) Error(text string) {
+	Color := b.colorize(color.FgRed, color.Bold)
+	b.printf(Color, "%v %v\n", b.icons["crossMark"], text)
+}
+
+// Info prints white text
+func (b *Buntstift) Info(text string) {
+	Color := b.colorize(color.FgWhite)
+	b.printf(Color, "  %v\n", text)
+}
+
+// Line prints a white dashed line
+func (b *Buntstift) Line() {
+	width, _ := b.getTerminalSize()
+	Color := b.colorize(color.FgWhite)
+	b.printf(Color, "%v", strings.Repeat("-", width))
+}
+
+// List prints a white list entry with optional intendation
+func (b *Buntstift) List(text string, indentLevel ...int) {
+	indent := 0
+	if len(indentLevel) > 0 {
+		indent = indentLevel[0]
+	}
+	Color := b.colorize(color.FgWhite)
+	b.printf(Color, "%v %v %v\n", strings.Repeat(" ", indent*2), b.icons["multiplicationDot"], text)
+}
+
+// NewLine prints new line
+func (b *Buntstift) NewLine() {
+	fmt.Fprintf(Output, "\r \n")
+}
+
+// Success prints a green check mark and text
+func (b *Buntstift) Success(text string) {
+	Color := b.colorize(color.FgGreen, color.Bold)
+	b.printf(Color, "%v %v\n", b.icons["checkMark"], text)
+}
+
+// Warn prints a yellow arrow and text
+func (b *Buntstift) Warn(text string) {
+	Color := b.colorize(color.FgYellow, color.Bold)
+	b.printf(Color, "%v %v\n", b.icons["rightPointingPointer"], text)
+}
+
+// WaitFor prints a white spinner until stop <- true
+func (b *Buntstift) WaitFor(worker func(stop chan bool)) {
+	stop := make(chan bool)
+	go b.spin(stop)
+	worker(stop)
 }

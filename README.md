@@ -85,6 +85,7 @@ If your application performs a long-running task, you may use the `WaitFor` meth
 b.WaitFor(func() {
   // Do something
   // ...
+  stop <- true
 });
 ```
 
