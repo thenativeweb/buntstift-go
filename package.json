@@ -1,0 +1,28 @@
+{
+  "name": "buntstift-go",
+  "version": "0.2.0",
+  "description": "buntstift-go makes the CLI colorful.",
+  "contributors": [
+    {
+      "name": "Golo Roden",
+      "email": "golo.roden@thenativeweb.io"
+    },
+    {
+      "name": "Matthias Wagler",
+      "email": "matthias.wagler@thenativeweb.io"
+    },
+    {
+      "name": "Christian Nolte",
+      "email": "christian.nolte@thenativeweb.io"
+    }
+  ],
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/thenativeweb/buntstift-go.git"
+  },
+  "keywords": [
+    "cli"
+  ],
+  "license": "MIT"
+}

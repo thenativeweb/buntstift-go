@@ -120,7 +120,7 @@ func (b *Buntstift) Line() {
 	b.printf(Color, "%v", strings.Repeat("-", width))
 }
 
-// List prints a white list entry with optional intendation
+// List prints a white list entry with optional indentation paramter
 func (b *Buntstift) List(text string, indentLevel ...int) {
 	indent := 0
 	if len(indentLevel) > 0 {
