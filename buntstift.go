@@ -27,29 +27,6 @@ type Buntstift struct {
 	icons   map[string]string
 }
 
-// New Buntstift returns Buntstift instance
-func New(params ...interface{}) *Buntstift {
-	var b *Buntstift
-
-	if len(params) > 0 {
-		param, ok := params[0].(Options)
-		if !ok {
-			panic("Wrong parameter type, must be Buntstift.Options")
-		}
-		b = new(Buntstift)
-		b.options = param
-	} else {
-		b = &Buntstift{options: Options{}}
-	}
-
-	b.icons = unicode
-	if b.options.NoUtf8 {
-		b.icons = ascii
-	}
-
-	return b
-}
-
 func (b *Buntstift) unsetColor() {
 	if b.options.NoColor {
 		return
@@ -100,6 +77,29 @@ func (b *Buntstift) getTerminalSize() (int, int) {
 /*
 	Public Api
 */
+
+// New Buntstift returns Buntstift instance
+func New(params ...interface{}) *Buntstift {
+	var b *Buntstift
+
+	if len(params) > 0 {
+		param, ok := params[0].(Options)
+		if !ok {
+			panic("Wrong parameter type, must be Buntstift.Options")
+		}
+		b = new(Buntstift)
+		b.options = param
+	} else {
+		b = &Buntstift{options: Options{}}
+	}
+
+	b.icons = unicode
+	if b.options.NoUtf8 {
+		b.icons = ascii
+	}
+
+	return b
+}
 
 // Error prints a red cross mark and text
 func (b *Buntstift) Error(text string) {
