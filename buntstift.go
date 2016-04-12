@@ -55,11 +55,11 @@ loop:
 	for {
 		select {
 		case <-stop:
-			fmt.Fprintf(Output, "\r")
+			fmt.Fprintf(os.Stderr, "\r")
 			break loop
 
 		default:
-			fmt.Printf("\r%s", spinner.Next())
+			fmt.Fprintf(os.Stderr, "\r%s", spinner.Next())
 			time.Sleep(50 * time.Millisecond)
 		}
 	}
