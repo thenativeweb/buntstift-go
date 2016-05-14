@@ -127,7 +127,7 @@ func (b *Buntstift) List(text string, indentLevel ...int) {
 		indent = indentLevel[0]
 	}
 	Color := b.colorize(color.FgWhite)
-	b.printf(Color, "%v %v %v\n", strings.Repeat(" ", indent*2), b.icons["multiplicationDot"], text)
+	b.printf(Color, "%v%v %v\n", strings.Repeat(" ", indent*2), b.icons["multiplicationDot"], text)
 }
 
 // NewLine prints new line
