@@ -11,6 +11,9 @@ import (
 	"github.com/tj/go-spin"
 )
 
+// custom colors
+const fgGray color.Attribute = 90
+
 // Output defines the standard output of the print functions. By default
 // os.Stdout from color is used.
 var Output = color.Output
@@ -19,6 +22,7 @@ var Output = color.Output
 type Options struct {
 	NoColor bool
 	NoUtf8  bool
+	Verbose bool
 }
 
 // Buntstift struct
@@ -50,14 +54,12 @@ func (b *Buntstift) colorize(values ...color.Attribute) *color.Color {
 
 func (b *Buntstift) spin(stop chan bool) {
 	spinner := spin.New()
-
 loop:
 	for {
 		select {
 		case <-stop:
 			fmt.Fprintf(os.Stderr, "\r")
 			break loop
-
 		default:
 			fmt.Fprintf(os.Stderr, "\r%s", spinner.Next())
 			time.Sleep(50 * time.Millisecond)
@@ -139,6 +141,15 @@ func (b *Buntstift) NewLine() {
 func (b *Buntstift) Success(text string) {
 	Color := b.colorize(color.FgGreen, color.Bold)
 	b.printf(Color, "%v %v\n", b.icons["checkMark"], text)
+}
+
+// Verbose prints verbose messages only in verbose mode
+func (b *Buntstift) Verbose(text string) {
+	if !b.options.Verbose {
+		return
+	}
+	Color := b.colorize(fgGray)
+	b.printf(Color, "  %v\n", text)
 }
 
 // Warn prints a yellow arrow and text
